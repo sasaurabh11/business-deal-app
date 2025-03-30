@@ -1,100 +1,97 @@
-# Virtual Deal Room
+# Virtual Deal Room (VDR)
 
-A real-time platform for buyers and sellers to negotiate deals, share documents, and securely finalize transactions.
+A secure and efficient platform for managing deal-related documents and communications in a virtual environment.
+
+## Overview
+
+Virtual Deal Room (VDR) is a modern web application designed to facilitate secure document sharing, collaboration, and communication for deal-related activities. It provides a centralized platform where users can manage, share, and collaborate on sensitive documents in a controlled and secure environment.
 
 ## Features
 
-- User Authentication (JWT-based)
-- Real-time Deal Negotiation
-- Document Management with Access Control
-- Real-time Chat with Typing Indicators
-- Deal Status Tracking
-- Secure File Upload
-- Role-based Access Control
+- 🔒 Secure document management and sharing
+- 👥 User role-based access control
+- 📁 Organized document structure
+- 💬 Real-time communication
+- 📱 Responsive design for all devices
+- 🔍 Advanced search and filtering capabilities
+- 📊 Activity tracking and audit logs
+- 🔐 End-to-end encryption for sensitive data
+
+## Tech Stack
+
+### Frontend
+- React.js
+- TypeScript
+- Material-UI
+- Redux for state management
+
+### Backend
+- Node.js
+- Express.js
+- MongoDB
+- JWT for authentication
 
 ## Prerequisites
 
 - Node.js (v14 or higher)
 - MongoDB
-- npm or yarn
+- npm or yarn package manager
 
-## Installation
+## Getting Started
+
+### Installation
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/sasaurabh11/virtual-deal-room.git
-cd virtual-deal-room
+git clone [repository-url]
+cd VDR
 ```
 
-2. Install dependencies:
+2. Install dependencies for both frontend and backend:
 ```bash
+# Install backend dependencies
 cd backend
+npm install
+
+# Install frontend dependencies
+cd ../frontend
 npm install
 ```
 
-3. Create a `.env` file in the backend directory with the following variables:
-```
-PORT=3000
-MONGODB_URI=mongodb://localhost:27017/virtual-deal-room
-JWT_SECRET=your_jwt_secret_key_here
-NODE_ENV=development
-```
+3. Set up environment variables:
+   - Create `.env` files in both frontend and backend directories
+   - Copy the respective `.env.example` files and fill in your configuration
 
-4. Start the development server:
+### Running the Application
+
+1. Start the backend server:
 ```bash
+cd backend
 npm run dev
 ```
 
-## API Endpoints
+2. Start the frontend development server:
+```bash
+cd frontend
+npm start
+```
 
-### Authentication
-- POST /api/auth/register - Register a new user
-- POST /api/auth/login - Login user
-- GET /api/auth/profile - Get user profile
+The application will be available at `http://localhost:3000`
 
-### Deals
-- POST /api/deals - Create a new deal
-- GET /api/deals - Get all deals
-- GET /api/deals/:id - Get single deal
-- PUT /api/deals/:id/price - Update deal price
-- PUT /api/deals/:id/status - Update deal status
-- POST /api/deals/:id/documents - Upload document to deal
+## Project Structure
 
-### Chat
-- POST /api/chat/:dealId/messages - Send a message
-- GET /api/chat/:dealId/messages - Get messages
-- PUT /api/chat/:dealId/messages/read - Mark messages as read
-- GET /api/chat/:dealId/unread-count - Get unread message count
-
-### Documents
-- GET /api/documents/:dealId - Get documents for a deal
-- POST /api/documents/:dealId/upload - Upload a document
-- PUT /api/documents/:dealId/:documentId/access - Update document access
-- DELETE /api/documents/:dealId/:documentId - Delete a document
-
-## Socket.IO Events
-
-### Client to Server
-- joinRoom - Join a deal room
-- negotiatePrice - Update deal price
-- sendMessage - Send a message
-- typing - User typing indicator
-- readMessages - Mark messages as read
-
-### Server to Client
-- priceUpdated - Deal price updated
-- newMessage - New message received
-- userTyping - User typing indicator
-- messagesRead - Messages marked as read
-
-## Security Features
-
-- JWT-based authentication
-- Password hashing with bcrypt
-- Role-based access control
-- Secure file upload with multer
-- Document access control
-- Input validation and sanitization
+```
+VDR/
+├── frontend/           # React frontend application
+│   ├── src/           # Source code
+│   ├── public/        # Static files
+│   └── package.json   # Frontend dependencies
+├── backend/           # Node.js backend application
+│   ├── src/          # Source code
+│   ├── config/       # Configuration files
+│   └── package.json  # Backend dependencies
+└── README.md         # Project documentation
+```
 
 ## Contributing
 
@@ -104,6 +101,22 @@ npm run dev
 4. Push to the branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
 
+## Security
+
+- All sensitive data is encrypted at rest and in transit
+- Regular security audits are performed
+- Access control is implemented at multiple levels
+- Session management and authentication are handled securely
+
 ## License
 
-This project is licensed under the MIT License - see the LICENSE file for details. 
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+## Support
+
+For support, please contact [support contact information]
+
+## Acknowledgments
+
+- Thanks to all contributors who have helped shape this project
+- Special thanks to the open-source community for the tools and libraries used in this project
