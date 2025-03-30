@@ -29,7 +29,8 @@ const dealSchema = new mongoose.Schema({
     default: 'Pending' 
   },
   documents: [{
-    name: String,
+    type: mongoose.Schema.Types.ObjectId, 
+    ref: 'document',
     url: String,
     uploadedBy: {
       type: mongoose.Schema.Types.ObjectId,

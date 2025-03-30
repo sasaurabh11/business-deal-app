@@ -7,30 +7,34 @@ import connectDB from "./config/db.js"
 import http from 'http'
 import { Server } from "socket.io"
 
-connectDB();
+const PORT = process.env.PORT || 3000;
 
 const app = express();
 const server = http.createServer(app);
-const io = new Server(server,{
-  cors:{
+const io = new Server(server, {
+  cors: {
     origin: '*',
   }
 });
 app.use(cors());
 app.use(cookieParser())
 app.use(express.json());
-app.use(express.json({limit: '10mb'}));
+app.use(express.json({ limit: '10mb' }));
 
 // Routes
 import userRoutes from './routes/user.router.js';
-app.use('/api/user', userRoutes);
+app.use('/api/v1/user', userRoutes);
 
 import dealRoutes from './routes/deal.router.js';
-app.use('/api/deals',dealRoutes);
-// app.use('/api/chat',chatRoutes);
-// app.use('/api/documents',documentRoutes);
+app.use('/api/v1/deals', dealRoutes);
 
-app.get("/", (req, res) => { 
+import chatRoutes from './routes/chat.router.js';
+app.use('/api/v1/chat', chatRoutes);
+
+import documentRoutes from './routes/documents.router.js';
+app.use('/api/v1/documents', documentRoutes);
+
+app.get("/", (req, res) => {
   res.send("App started");
 });
 app.all("*", (req, res) => {
@@ -38,35 +42,43 @@ app.all("*", (req, res) => {
 })
 
 io.on('connection', (socket) => {
-  console.log('A user connected with: ', socket.id);
+  console.log(`User connected: ${socket.id}`);
 
-  socket.on('joinRoom', (dealId) => {
+  const joinRoom = (dealId) => {
     socket.join(dealId);
     console.log(`User joined deal room: ${dealId}`);
-  });
+  };
 
-  socket.on('chatPrice', ({ dealId, newPrice }) => {
-    console.log(`New price negotiation in deal ${dealId}: $${newPrice}`);
+  const chatPrice = ({ dealId, newPrice }) => {
+    console.log(`Price update in deal ${dealId}: $${newPrice}`);
     io.to(dealId).emit('priceUpdated', { dealId, newPrice });
-  });
+  };
 
-  socket.on('sendMessage', ({ dealId, senderId, receiverId, content }) => {
+  const sendMessage = ({ dealId, senderId, receiverId, content }) => {
     const message = { dealId, senderId, receiverId, content, isRead: false };
     io.to(dealId).emit('newMessage', message);
-  });
+  };
 
-  socket.on('typing', ({ dealId, userId }) => {
+  const typing = ({ dealId, userId }) => {
     socket.to(dealId).emit('userTyping', { userId });
-  });
+  };
 
-  socket.on('readMessages', ({ dealId }) => {
+  const readMessages = ({ dealId }) => {
     io.to(dealId).emit('messagesRead');
-  });
+  };
 
-  socket.on('disconnect', () => {
-    console.log('User disconnected:', socket.id);
-  });
+  socket.on('joinRoom', joinRoom);
+  socket.on('chatPrice', chatPrice);
+  socket.on('sendMessage', sendMessage);
+  socket.on('typing', typing);
+  socket.on('readMessages', readMessages);
+
+  socket.on('disconnect', () => console.log(`User disconnected: ${socket.id}`));
 });
 
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`Server is running on port http://localhost:${PORT}`));
+connectDB().then(() => {
+  server.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
+}).catch(err => {
+  console.error('Database connection failed:', err);
+  process.exit(1);
+});
