@@ -8,6 +8,8 @@ import DealDetails from './components/DealDetails';
 import Analytics from './components/Analytics';
 import Navbar from './components/Navbar';
 import { AppContext } from './context/Appcontext';
+import Home from "./components/Home";
+import UserDashBoard from "./components/UserDashBoard";
 
 const PrivateRoute = ({ children }) => {
   const { user } = useContext(AppContext);
@@ -15,7 +17,7 @@ const PrivateRoute = ({ children }) => {
 };
 
 const AdminRoute = ({ children }) => {
-  const { user } = useContext(AppContext); // Fixed: using useContext instead of useAppContext
+  const { user } = useContext(AppContext);
   return user?.role === 'admin' ? children : <Navigate to="/deals" />;
 };
 
@@ -27,8 +29,17 @@ const App = () => {
       <Navbar />
       <div className="container mx-auto px-4 py-8">
         <Routes>
-          <Route path="/login" element={!user ? <Login /> : <Navigate to="/deals" />} />
-          <Route path="/register" element={!user ? <Register /> : <Navigate to="/deals" />} />
+          <Route path="/" element={<Home />} />
+          <Route path="/login" element={!user ? <Login /> : <Navigate to="/user-dashboard" />} />
+          <Route path="/register" element={!user ? <Register /> : <Navigate to="/user-dashboard" />} />
+          <Route 
+            path="/user-dashboard"
+            element={
+              <PrivateRoute>
+                <UserDashBoard />
+              </PrivateRoute>
+            }
+          />
           <Route
             path="/deals"
             element={
@@ -53,7 +64,6 @@ const App = () => {
               </AdminRoute>
             }
           />
-          <Route path="/" element={<Navigate to={user ? "/deals" : "/login"} />} />
         </Routes>
       </div>
     </div>

@@ -2,14 +2,15 @@ import dealModel from '../models/deal.model.js';
 
 const createDeal = async (req, res) => {
   try {
-    const { title, description, price } = req.body;
-    console.log(req.user.role);
-    if (req.user.role !== 'seller') {
+    const { sellerId, title, description, price } = req.body;
+
+    if (req.user.role !== 'buyer') {
       return res.status(403).json({ success: false, message: 'Access denied. Only buyers can initiate deals.' });
     }
 
     const deal = new dealModel({
-      seller: req.user.id,
+      buyer: req.user.id,
+      seller: sellerId,
       title,
       description,
       price,

@@ -21,3 +21,17 @@ export const signupUser = async (data) => {
         return error.response.data;
     }
 }
+
+export const getAllUser = async () => {
+    try {
+        const response = await axios.get(`${baseURL}/api/v1/user/get-all-user`, {
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('token')}`,
+              },
+        });
+        return response.data;
+    } catch (error) {
+        console.error('error in getAllUser API', error.message)
+        return error.response.data;
+    }
+}

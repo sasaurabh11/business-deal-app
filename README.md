@@ -1,4 +1,4 @@
-# Virtual Deal Room (VDR)
+# Bussiness Deal Room (VDR)
 
 A secure and efficient platform for managing deal-related documents and communications in a virtual environment.
 
@@ -107,16 +107,3 @@ VDR/
 - Regular security audits are performed
 - Access control is implemented at multiple levels
 - Session management and authentication are handled securely
-
-## License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
-
-## Support
-
-For support, please contact [support contact information]
-
-## Acknowledgments
-
-- Thanks to all contributors who have helped shape this project
-- Special thanks to the open-source community for the tools and libraries used in this project

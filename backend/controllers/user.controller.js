@@ -64,4 +64,15 @@ const loginUser = async (req, res) => {
   }
 };
 
-export { register, loginUser };
+const getAllUser = async(req, res) => {
+  try {
+    const users = await userModel.find({role: 'seller'}).select('-password -__v');
+    res.status(200).json({ success: true, message: 'Users retrieved successfully!', users });
+  }
+  catch (error) {
+    console.error('Fetch Users Error:', error);
+    res.status(500).json({ success: false, message: 'Error retrieving users. Please try again later.', error });
+  }
+}
+
+export { register, loginUser, getAllUser };
