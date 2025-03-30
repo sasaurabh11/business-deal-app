@@ -56,7 +56,7 @@ const UserDashBoard = () => {
                                             <p className="text-gray-300">
                                                 <span className="font-medium">Username:</span> {seller.username}
                                             </p>
-                                            <button className="mt-4 bg-blue-600 hover:bg-blue-500 text-white py-2 px-4 rounded transition-colors">
+                                            <button  className="mt-4 bg-blue-600 hover:bg-blue-500 text-white py-2 px-4 rounded transition-colors">
                                                 Contact Seller
                                             </button>
                                         </div>
