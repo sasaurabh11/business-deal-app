@@ -35,3 +35,7 @@ export const getAllUser = async () => {
         return error.response.data;
     }
 }
+
+export const getUserDeals = async () => {
+
+}
