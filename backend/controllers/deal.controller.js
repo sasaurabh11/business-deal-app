@@ -1,41 +1,38 @@
-import dealModel from "../models/deal.model.js";
+import dealModel from '../models/deal.model.js';
 
 const createDeal = async (req, res) => {
   try {
-    const { sellerId, title, description, price } = req.body;
-
-    if (req.user.role !== 'buyer') {
-      return res.status(403).json({ message: 'Only buyers can create deals' });
+    const { title, description, price } = req.body;
+    console.log(req.user.role);
+    if (req.user.role !== 'seller') {
+      return res.status(403).json({ success: false, message: 'Access denied. Only buyers can initiate deals.' });
     }
 
-    const newDeal = await dealModel.create({
-      buyer: req.user.id,
-      seller: sellerId,
+    const deal = new dealModel({
+      seller: req.user.id,
       title,
       description,
-      price
+      price,
     });
 
-    res.status(201).json({ success: true, newDeal });
+    await deal.save();
+
+    res.status(201).json({ success: true, message: 'Deal created successfully!', deal });
   } catch (error) {
-    console.error(error)
-    res.status(500).json({ success: false, message: 'Failed to create deal', error });
+    console.error('Deal Creation Error:', error);
+    res.status(500).json({ success: false, message: 'Server error. Unable to create deal.', error });
   }
 };
 
 const getDeals = async (req, res) => {
   try {
-    let deals;
-    if (req.user.role === 'buyer') {
-      deals = await dealModel.find({ buyer: req.user.id }).populate('seller', 'name email');
-    } else {
-      deals = await dealModel.find({ seller: req.user.id }).populate('buyer', 'name email');
-    }
-
-    res.status(200).json({ success: true, deals });
+    const filter = req.user.role === 'buyer' ? { buyer: req.user.id } : { seller: req.user.id };
+    const deals = await dealModel.find(filter).populate(req.user.role === 'buyer' ? 'seller' : 'buyer', 'name email');
+    
+    res.status(200).json({ success: true, message: 'Deals retrieved successfully!', deals });
   } catch (error) {
-    console.error(error)
-    res.status(500).json({ success: false, message: 'Error fetching deals', error });
+    console.error('Fetch Deals Error:', error);
+    res.status(500).json({ success: false, message: 'Error retrieving deals. Please try again later.', error });
   }
 };
 
@@ -44,23 +41,25 @@ const updateDeal = async (req, res) => {
     const { dealId, status } = req.body;
 
     if (req.user.role !== 'seller') {
-      return res.status(403).json({ message: 'Only sellers can update deal status' });
+      return res.status(403).json({ success: false, message: 'Unauthorized. Only sellers can update deal status.' });
     }
 
     const deal = await dealModel.findById(dealId);
-    if (!deal) return res.status(404).json({ success: false, message: 'Deal not found' });
+    if (!deal) {
+      return res.status(404).json({ success: false, message: 'No deal found with the given ID.' });
+    }
 
     if (deal.seller.toString() !== req.user.id) {
-      return res.status(403).json({ message: 'unauthorized access of assests' });
+      return res.status(403).json({ success: false, message: 'Access denied. You cannot modify this deal.' });
     }
 
     deal.status = status;
     await deal.save();
 
-    res.status(200).json({ success: true, message: 'Deal status updated successfully', deal });
+    res.status(200).json({ success: true, message: 'Deal status successfully updated!', deal });
   } catch (error) {
-    console.error(error)
-    res.status(500).json({ success: false, message: 'Failed to update deal status', error });
+    console.error('Update Deal Error:', error);
+    res.status(500).json({ success: false, message: 'Could not update deal. Please try again later.', error });
   }
 };
 

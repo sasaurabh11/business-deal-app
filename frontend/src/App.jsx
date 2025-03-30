@@ -1,87 +1,63 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { ThemeProvider, createTheme } from '@mui/material';
-import { ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import "./App.css";
+import React, { useContext } from 'react';
+import { Routes, Route, Navigate } from 'react-router-dom';
+import Login from './components/Login';
+import Register from './components/Register';
+import Deals from './components/Deals';
+import DealDetails from './components/DealDetails';
+import Analytics from './components/Analytics';
+import Navbar from './components/Navbar';
+import { AppContext } from './context/Appcontext';
 
-// Components
-import Navbar from './components/layout/Navbar';
-import PrivateRoute from './components/routing/PrivateRoute';
-import Login from './components/auth/Login';
-import Register from './components/auth/Register';
-import Dashboard from './components/dashboard/Dashboard';
-import DealList from './components/deals/DealList';
-import DealDetail from './components/deals/DealDetail';
-import CreateDeal from './components/deals/CreateDeal';
-import Profile from './components/profile/Profile';
+const PrivateRoute = ({ children }) => {
+  const { user } = useContext(AppContext);
+  return user ? children : <Navigate to="/login" />;
+};
 
-const theme = createTheme({
-  palette: {
-    primary: {
-      main: '#1976d2',
-    },
-    secondary: {
-      main: '#dc004e',
-    },
-  },
-});
+const AdminRoute = ({ children }) => {
+  const { user } = useContext(AppContext); // Fixed: using useContext instead of useAppContext
+  return user?.role === 'admin' ? children : <Navigate to="/deals" />;
+};
 
-function App() {
+const App = () => {
+  const { user } = useContext(AppContext);
+
   return (
-    <ThemeProvider theme={theme}>
-      <Router>
-        <div className="app">
-          <Navbar />
-          <div className="container">
-            <Routes>
-              <Route path="/login" element={<Login />} />
-              <Route path="/register" element={<Register />} />
-              <Route
-                path="/"
-                element={
-                  <PrivateRoute>
-                    <Dashboard />
-                  </PrivateRoute>
-                }
-              />
-              <Route
-                path="/deals"
-                element={
-                  <PrivateRoute>
-                    <DealList />
-                  </PrivateRoute>
-                }
-              />
-              <Route
-                path="/deals/:id"
-                element={
-                  <PrivateRoute>
-                    <DealDetail />
-                  </PrivateRoute>
-                }
-              />
-              <Route
-                path="/create-deal"
-                element={
-                  <PrivateRoute>
-                    <CreateDeal />
-                  </PrivateRoute>
-                }
-              />
-              <Route
-                path="/profile"
-                element={
-                  <PrivateRoute>
-                    <Profile />
-                  </PrivateRoute>
-                }
-              />
-            </Routes>
-          </div>
-          <ToastContainer />
-        </div>
-      </Router>
-    </ThemeProvider>
+    <div className="min-h-screen bg-gray-900">
+      <Navbar />
+      <div className="container mx-auto px-4 py-8">
+        <Routes>
+          <Route path="/login" element={!user ? <Login /> : <Navigate to="/deals" />} />
+          <Route path="/register" element={!user ? <Register /> : <Navigate to="/deals" />} />
+          <Route
+            path="/deals"
+            element={
+              <PrivateRoute>
+                <Deals />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/deals/:dealId"
+            element={
+              <PrivateRoute>
+                <DealDetails />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/analytics"
+            element={
+              <AdminRoute>
+                <Analytics />
+              </AdminRoute>
+            }
+          />
+          <Route path="/" element={<Navigate to={user ? "/deals" : "/login"} />} />
+        </Routes>
+      </div>
+    </div>
   );
-}
+};
 
 export default App;
