@@ -36,6 +36,17 @@ const ChatModal = ({ dealId, otherUser, onClose }) => {
   const messagesEndRef = useRef(null);
   const typingTimeoutRef = useRef(null);
   const fileInputRef = useRef(null);
+  const [incomingMessage, setIncomingMessage] = useState(null);
+
+  useEffect(() => {
+    if ("Notification" in window && Notification.permission !== "granted") {
+      Notification.requestPermission().then((permission) => {
+        if (permission !== "granted") {
+          console.log("Notifications disabled by user.");
+        }
+      });
+    }
+  }, []);
 
   const getSafeUserName = (userObj) => {
     if (!userObj) return "U";
@@ -84,6 +95,7 @@ const ChatModal = ({ dealId, otherUser, onClose }) => {
           createdAt: message.createdAt || new Date().toISOString(),
         };
         setMessages((prev) => [...prev, transformedMsg]);
+        setIncomingMessage(transformedMsg); 
       });
 
       socket.on("userTyping", ({ userId }) => {
@@ -117,6 +129,27 @@ const ChatModal = ({ dealId, otherUser, onClose }) => {
       clearTimeout(typingTimeoutRef.current);
     };
   }, [dealId, socket, user?._id, fetchData]);
+
+  useEffect(() => {
+    if (incomingMessage && incomingMessage.sender !== user?._id) {
+      if (Notification.permission === "granted") {
+        const senderName = getSafeDisplayName(otherUser);
+        const notificationOptions = {
+          body: incomingMessage.message || incomingMessage.content,
+          icon: "/logo",
+        };
+
+        const notification = new Notification(
+          `New message from ${senderName}`,
+          notificationOptions
+        );
+
+        notification.onclick = () => {
+          window.focus();
+        };
+      }
+    }
+  }, [incomingMessage, user?._id, otherUser]);
 
   useEffect(() => {
     scrollToBottom();
