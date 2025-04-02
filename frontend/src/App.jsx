@@ -4,8 +4,7 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import Login from './components/Login';
 import Register from './components/Register';
 import Deals from './components/Deals';
-import DealDetails from './components/DealDetails';
-import Analytics from './components/Analytics';
+// import Analytics from './components/Analytics';
 import Navbar from './components/Navbar';
 import { AppContext } from './context/Appcontext';
 import Home from "./components/Home";
@@ -48,22 +47,14 @@ const App = () => {
               </PrivateRoute>
             }
           />
-          <Route
-            path="/deals/:dealId"
-            element={
-              <PrivateRoute>
-                <DealDetails />
-              </PrivateRoute>
-            }
-          />
-          <Route
+          {/* <Route
             path="/analytics"
             element={
               <AdminRoute>
                 <Analytics />
               </AdminRoute>
             }
-          />
+          /> */}
         </Routes>
       </div>
     </div>

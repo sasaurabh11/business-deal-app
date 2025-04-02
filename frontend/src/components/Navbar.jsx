@@ -27,11 +27,11 @@ const Navbar = () => {
                         Deals
                     </Link>
 
-                    {user?.role === "admin" && (
+                    {/* {user?.role === "admin" && (
                         <Link to="/analytics" className="hover:text-blue-400 transition duration-300">
                             Analytics
                         </Link>
-                    )}
+                    )} */}
 
                     {user ? (
                         <button
@@ -66,11 +66,11 @@ const Navbar = () => {
                     <Link to="/deals" className="hover:text-blue-400 transition duration-300">
                         Deals
                     </Link>
-                    {user?.role === "admin" && (
+                    {/* {user?.role === "admin" && (
                         <Link to="/analytics" className="hover:text-blue-400 transition duration-300">
                             Analytics
                         </Link>
-                    )}
+                    )} */}
                     {user ? (
                         <button
                             onClick={handleLogout}

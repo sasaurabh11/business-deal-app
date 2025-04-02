@@ -176,12 +176,6 @@ const Deals = () => {
             <p className="text-gray-300 text-center">
               You don't have any active deals yet.
             </p>
-            <button
-              className="mt-4 mx-auto block bg-green-600 hover:bg-green-500 text-white py-2 px-6 rounded transition-colors"
-              onClick={() => setActiveTab("sellers")}
-            >
-              Find Sellers
-            </button>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -198,7 +192,7 @@ const Deals = () => {
                   <span className="font-medium">Status:</span>
                   <span
                     className={`ml-2 px-2 py-1 rounded text-sm ${
-                      deal.status === "active"
+                      deal.status === "In Progress"
                         ? "bg-green-500"
                         : deal.status === "pending"
                         ? "bg-yellow-500"
@@ -208,12 +202,6 @@ const Deals = () => {
                     {deal.status}
                   </span>
                 </p>
-                <button
-                  className="mt-4 bg-blue-600 hover:bg-blue-500 text-white py-2 px-4 rounded transition-colors"
-                  onClick={() => navigate(`/deals/${deal._id}`)}
-                >
-                  View Details
-                </button>
               </div>
             ))}
           </div>

@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { AppContext } from "../context/Appcontext";
-import { getAllUser, getUserDeals } from "../services/api";
+import { getAllUser, getUserDeals, updateDealStatus } from "../services/api";
 import ChatModal from "./Chat";
 
 const UserDashBoard = () => {
@@ -66,8 +66,6 @@ const UserDashBoard = () => {
       name: isSeller ? deal.buyerName || "Buyer" : deal.sellerName || "Seller",
     };
 
-    console.log(deal);
-
     if (!partner._id) {
       console.error("Missing partner ID in deal:", deal);
       return;
@@ -89,7 +87,12 @@ const UserDashBoard = () => {
   };
 
   const handleAcceptDeal = (deal) => {
+    updateDealStatus(deal._id, "In Progress");
     openDealChat(deal, true);
+  };
+
+  const handleRejectDeal = (deal) => {
+    updateDealStatus(deal._id, "Cancelled");
   };
 
   if (!user) {
@@ -232,12 +235,16 @@ const UserDashBoard = () => {
                               {deal.status}
                             </span>
                           </p>
-                          <button
-                            className="mt-4 bg-blue-600 hover:bg-blue-500 text-white py-2 px-4 rounded transition-colors"
-                            onClick={() => openDealChat(deal)}
-                          >
-                            View Details & Chat
-                          </button>
+                          {
+                            deal.status !== "Cancelled" && (
+                              <button
+                                className="mt-4 bg-blue-600 hover:bg-blue-500 text-white py-2 px-4 rounded transition-colors"
+                                onClick={() => openDealChat(deal)}
+                              >
+                                View Details & Chat
+                              </button>
+                            )
+                          }
                         </div>
                       ))}
                     </div>
@@ -272,7 +279,7 @@ const UserDashBoard = () => {
                         <span className="font-medium">Status:</span>
                         <span
                           className={`ml-2 px-2 py-1 rounded text-sm ${
-                            deal.status === "active"
+                            deal.status === "In Progress"
                               ? "bg-green-500"
                               : deal.status === "pending"
                               ? "bg-yellow-500"
@@ -282,15 +289,35 @@ const UserDashBoard = () => {
                           {deal.status}
                         </span>
                       </p>
-                      <button
-                        className="mt-4 bg-blue-600 hover:bg-blue-500 text-white py-2 px-4 rounded transition-colors mr-2"
-                        onClick={() => handleAcceptDeal(deal)}
-                      >
-                        Accept & Chat
-                      </button>
-                      <button className="mt-4 bg-red-600 hover:bg-red-500 text-white py-2 px-4 rounded transition-colors">
-                        Reject
-                      </button>
+                      {deal.status !== "Cancelled" &&
+                        (deal.status === "Pending" ? (
+                          <button
+                            className="mt-4 bg-blue-600 hover:bg-blue-500 text-white py-2 px-4 rounded transition-colors mr-2"
+                            onClick={() => handleAcceptDeal(deal)}
+                          >
+                            Accept & Chat
+                          </button>
+                        ) : (
+                          <button
+                            className="mt-4 bg-blue-600 hover:bg-blue-500 text-white py-2 px-4 rounded transition-colors mr-2"
+                            onClick={() => openDealChat(deal, true)}
+                          >
+                            View Details & Chat
+                          </button>
+                        ))}
+
+                      {deal.status === "Cancelled" ? (
+                        <p className="mt-4 bg-red-600 hover:bg-red-500 text-white py-2 px-4 rounded transition-colors">
+                          Cancelled Deal
+                        </p>
+                      ) : (
+                        <button
+                          className="mt-4 bg-red-600 hover:bg-red-500 text-white py-2 px-4 rounded transition-colors"
+                          onClick={() => handleRejectDeal(deal)}
+                        >
+                          Reject
+                        </button>
+                      )}
                     </div>
                   ))}
                 </div>

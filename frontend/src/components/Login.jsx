@@ -20,7 +20,6 @@ const Login = () => {
     try {
       const response = await loginUser({ email, password, username });
       if (response.success) {
-        console.log(response);
         setToken(response.token);
         setUser(response.user);
         localStorage.setItem("token", response.token);

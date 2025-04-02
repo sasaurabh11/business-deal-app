@@ -15,7 +15,6 @@ const setCookie = (res, token) => {
 const register = async (req, res) => {
   try {
     const { username, name, email, password, role } = req.body;
-    console.log(username, name, email, password, role);
 
     if (![username, name, email, password, role].every(Boolean)) {
       return res.status(400).json({ success: false, message: 'Please fill in all fields.' });
