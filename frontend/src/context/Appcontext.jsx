@@ -10,6 +10,12 @@ const AppContextProvider = (props) => {
     const [socket, setSocket] = useState(null);
     const [currentChat, setCurrentChat] = useState(null);
     const [unreadCounts, setUnreadCounts] = useState({});
+    const [isDarkMode, setIsDarkMode] = useState(false);
+
+  const toggleTheme = () => {
+    setIsDarkMode(!isDarkMode);
+  };
+
 
     useEffect(() => {
         const newSocket = io(import.meta.env.VITE_BACKEND_URL, {
@@ -31,7 +37,8 @@ const AppContextProvider = (props) => {
         token, setToken,
         logout,
         loading, setLoading,
-        socket, currentChat, setCurrentChat, unreadCounts, setUnreadCounts
+        socket, currentChat, setCurrentChat, unreadCounts, setUnreadCounts,
+        isDarkMode, toggleTheme
     }
 
     return (

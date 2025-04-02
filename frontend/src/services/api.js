@@ -53,11 +53,15 @@ export const getUserDeals = async () => {
 
 export const createDeal = async (dealData) => {
   try {
-    const response = await axios.post(`${baseURL}/api/v1/deals/create`, dealData, {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
-    });
+    const response = await axios.post(
+      `${baseURL}/api/v1/deals/create`,
+      dealData,
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      }
+    );
     return response.data;
   } catch (error) {
     console.error("Error in createDeal:", error);
@@ -67,16 +71,20 @@ export const createDeal = async (dealData) => {
 
 export const updateDealStatus = async (dealId, status) => {
   try {
-    const response = await axios.put(`${baseURL}/api/v1/deals/update-status`, {dealId, status}, {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
+    const response = await axios.put(
+      `${baseURL}/api/v1/deals/update-status`,
+      { dealId, status },
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
       }
-    })
+    );
   } catch (error) {
     console.error("Error in updateDealStatus:", error);
     throw error;
   }
-}
+};
 
 export const sendMessage = async (messageData) => {
   const response = await fetch(`${baseURL}/api/v1/chat/send-msg`, {
@@ -116,33 +124,68 @@ export const markMessagesAsRead = async (dealId) => {
 };
 
 export const uploadDocs = async (formData) => {
-    try {
-      const response = await axios.post(`${baseURL}/api/v1/documents/upload`, formData, {
+  try {
+    const response = await axios.post(
+      `${baseURL}/api/v1/documents/upload`,
+      formData,
+      {
         headers: {
-          'Authorization': `Bearer ${localStorage.getItem("token")}`,
-          'Content-Type': 'multipart/form-data' 
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+          "Content-Type": "multipart/form-data",
         },
-      });
+      }
+    );
 
-      return response.data;
-    } catch (error) {
-      console.error("Error in uploadDocs:", error);
-      throw error;
-    }
-  };
+    return response.data;
+  } catch (error) {
+    console.error("Error in uploadDocs:", error);
+    throw error;
+  }
+};
 
-  export const getDocs = async (dealId) => {
-    try {
-      const response = await axios.get(`${baseURL}/api/v1/documents/${dealId}`, {
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem("token")}`,
-        },
-      });
+export const getDocs = async (dealId) => {
+  try {
+    const response = await axios.get(`${baseURL}/api/v1/documents/${dealId}`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    });
 
-      ("res", response.data)
-      return response.data;
-    } catch (error) {
-      console.error("Error in uploadDocs:", error);
-      throw error;
-    }
-  };
+    return response.data;
+  } catch (error) {
+    console.error("Error in uploadDocs:", error);
+    throw error;
+  }
+};
+
+
+//analytics
+export const dealsStats = async () => {
+  try {
+    const response = await axios.get(`${baseURL}/api/v1/analytics/deals-statistics`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error("Error in uploadDocs:", error);
+    throw error;
+  }
+};
+
+export const userStatsapi = async () => {
+  try {
+    const response = await axios.get(`${baseURL}/api/v1/analytics/user-engagement`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error("Error in uploadDocs:", error);
+    throw error;
+  }
+};

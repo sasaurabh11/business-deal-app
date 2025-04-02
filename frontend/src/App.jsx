@@ -1,12 +1,12 @@
 import "./App.css";
-import React, { useContext } from 'react';
-import { Routes, Route, Navigate } from 'react-router-dom';
-import Login from './components/Login';
-import Register from './components/Register';
-import Deals from './components/Deals';
-// import Analytics from './components/Analytics';
-import Navbar from './components/Navbar';
-import { AppContext } from './context/Appcontext';
+import React, { useContext } from "react";
+import { Routes, Route, Navigate } from "react-router-dom";
+import Login from "./components/Login";
+import Register from "./components/Register";
+import Deals from "./components/Deals";
+import AnalyticsDashboard from "./components/Analytics";
+import Navbar from "./components/Navbar";
+import { AppContext } from "./context/Appcontext";
 import Home from "./components/Home";
 import UserDashBoard from "./components/UserDashBoard";
 
@@ -17,7 +17,7 @@ const PrivateRoute = ({ children }) => {
 
 const AdminRoute = ({ children }) => {
   const { user } = useContext(AppContext);
-  return user?.role === 'admin' ? children : <Navigate to="/deals" />;
+  return user?.role === "admin" ? children : <Navigate to="/user-dashboard" />;
 };
 
 const App = () => {
@@ -29,9 +29,31 @@ const App = () => {
       <div className="container mx-auto px-4 py-8">
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/login" element={!user ? <Login /> : <Navigate to="/user-dashboard" />} />
-          <Route path="/register" element={!user ? <Register /> : <Navigate to="/user-dashboard" />} />
-          <Route 
+          <Route
+            path="/login"
+            element={
+              !user ? (
+                <Login />
+              ) : user.role === "admin" ? (
+                <Navigate to="/analytics" />
+              ) : (
+                <Navigate to="/user-dashboard" />
+              )
+            }
+          />
+          <Route
+            path="/register"
+            element={
+              !user ? (
+                <Register />
+              ) : user.role === "admin" ? (
+                <Navigate to="/analytics" />
+              ) : (
+                <Navigate to="/user-dashboard" />
+              )
+            }
+          />
+          <Route
             path="/user-dashboard"
             element={
               <PrivateRoute>
@@ -47,14 +69,14 @@ const App = () => {
               </PrivateRoute>
             }
           />
-          {/* <Route
+          <Route
             path="/analytics"
             element={
               <AdminRoute>
-                <Analytics />
+                <AnalyticsDashboard />
               </AdminRoute>
             }
-          /> */}
+          />
         </Routes>
       </div>
     </div>

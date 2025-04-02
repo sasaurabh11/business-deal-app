@@ -23,7 +23,14 @@ const Login = () => {
         setToken(response.token);
         setUser(response.user);
         localStorage.setItem("token", response.token);
-        navigate("/deals");
+        console.log(response.user.role)
+        setTimeout(() => {
+          if(response.user.role === 'admin') {
+            navigate("/analytics");
+          } else {
+            navigate("/deals");
+          }
+        }, 0);
       } else {
         setError(response.message || "Invalid credentials");
       }
