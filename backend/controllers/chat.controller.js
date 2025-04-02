@@ -2,6 +2,7 @@ import messageModel from '../models/chat.model.js';
 
 const sendMessage = async (req, res) => {
   try {
+    console.log('Send Message Request:', req.body);
     const { dealId, receiverId, message } = req.body;
 
     if (!dealId || !receiverId || !message) {

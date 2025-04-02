@@ -16,20 +16,6 @@ export const getAllDeals = async () => {
   }
 };
 
-export const createDeal = async (dealData) => {
-  try {
-    const response = await axios.post(`${API_URL}/create`, dealData, {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem('token')}`,
-      },
-    });
-    return response.data;
-  } catch (error) {
-    console.error('Error in createDeal:', error);
-    throw error;
-  }
-};
-
 export const getDealById = async (dealId) => {
   try {
     const response = await axios.get(`${API_URL}/deals/${dealId}`, {
@@ -91,7 +77,6 @@ const getDealsByRole = async (role) => {
 
 const dealService = {
   getAllDeals,
-  createDeal,
   getDealById,
   updateDealStatus,
   updateDealPrice,

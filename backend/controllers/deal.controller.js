@@ -2,6 +2,7 @@ import dealModel from '../models/deal.model.js';
 
 const createDeal = async (req, res) => {
   try {
+    console.log(req.body)
     const { sellerId, title, description, price } = req.body;
 
     if (req.user.role !== 'buyer') {
@@ -27,8 +28,10 @@ const createDeal = async (req, res) => {
 
 const getDeals = async (req, res) => {
   try {
-    const filter = req.user.role === 'buyer' ? { buyer: req.user.id } : { seller: req.user.id };
+    const filter = req.user.role === 'buyer' ? { buyer: req.user._id } : { seller: req.user._id };
     const deals = await dealModel.find(filter).populate(req.user.role === 'buyer' ? 'seller' : 'buyer', 'name email');
+
+    console.log(deals)
     
     res.status(200).json({ success: true, message: 'Deals retrieved successfully!', deals });
   } catch (error) {
